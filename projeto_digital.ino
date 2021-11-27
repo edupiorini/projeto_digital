@@ -43,9 +43,9 @@ void loop() {
      case 2:
       checkFingerPrint();
       break;
-//     case 3;
-//      //printStoredFingerprintsCount();
-//      break;
+     case 3:
+      printStoredFingerprintsCount();
+      break;
 //     case 4;
 //     // deleteFingerprint();
 //      break;
@@ -66,7 +66,7 @@ void loop() {
 //Construção do Menu
 void printMenu(){
   Serial.println();
-  Serial.println(F("Digite um dos números do menu abaixo:"));
+  Serial.println(F("\nDigite um dos números do menu abaixo:"));
   Serial.println(F("1 - Cadastrar digital"));
   Serial.println(F("2 - Verificar digital"));
   Serial.println(F("3 - Mostrar quantidade de digitais cadastradas"));
@@ -79,7 +79,7 @@ String getCommand() {
   return Serial.readStringUntil('\n');
 }
 
-//Cadastro de digitais
+//------------------------------------------------------------------------------------------------------->Cadastro de digitais
 void storeFingerprint(){
   Serial.println(F("Qual a posição para guardar a digital? (1 a 149)"));
 
@@ -142,7 +142,7 @@ void storeFingerprint(){
   Serial.println(F("Sucesso!!"));
 }
 
-// Verificação de digital cadastrada
+//------------------------------------------------------------------------------------------ >Verificação de digital cadastrada
 void checkFingerPrint(){
   Serial.println(F("Encoste o dedo no sensor"));
 
@@ -162,6 +162,16 @@ void checkFingerPrint(){
   Serial.print(F("Digital encontrada com confiança de "));
   Serial.print(fingerprintSensor.confidence);
   Serial.print(F(" na posição "));
-  Serial.print(fingerprintSensor.fingerID);
+  Serial.println(fingerprintSensor.fingerID);
   
+}
+
+//---------------------------------------------------------------------------------------------> Mostra quantidade de Digitais cadastradas
+void printStoredFingerprintsCount() {
+  //sensor puts qtty of fingerprints stored in "templateCount"
+  fingerprintSensor.getTemplateCount();
+
+  //Shows qtty stored
+  Serial.print(F("Digitais cadastradas: "));
+  Serial.println(fingerprintSensor.templateCount);
 }
