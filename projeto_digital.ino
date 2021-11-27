@@ -145,5 +145,23 @@ void storeFingerprint(){
 // Verificação de digital cadastrada
 void checkFingerPrint(){
   Serial.println(F("Encoste o dedo no sensor"));
+
+  while(fingerprintSensor.getImage() != FINGERPRINT_OK);
+
+  if(fingerprintSensor.image2Tz() != FINGERPRINT_OK) {
+    Serial.println(F("Erro image2Tz"));
+    return;
+  }
+
+  if(fingerprintSensor.fingerFastSearch() != FINGERPRINT_OK){
+    Serial.println(F("Digital não encontrada!"));
+    return;
+  }
+
+  //Digital passou pelas verificações e será exibido a confiança da digital
+  Serial.print(F("Digital encontrada com confiança de "));
+  Serial.print(fingerprintSensor.confidence);
+  Serial.print(F(" na posição "));
+  Serial.print(fingerprintSensor.fingerID);
   
 }
