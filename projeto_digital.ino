@@ -49,9 +49,9 @@ void loop() {
      case 4:
       deleteFingerprint();
       break;
-//     case 5;
-//     // emptyDatabase();
-//      break;
+     case 5:
+      emptyDatabase();
+      break;
      default:
       Serial.println(F("Opção Inválida"));
       break;
@@ -195,5 +195,35 @@ void deleteFingerprint() {
     
   }else {
     Serial.println(F("Digital apagada com sucesso!!"));
+  }
+}
+
+//-------------------------------------------------------------------------------------------> Empty Database
+void emptyDatabase()
+{
+  Serial.println(F("Tem certeza? (1 -> Sim  /  2 -> Nao)"));
+
+ 
+  String strCommand = getCommand();
+  int command = strCommand.toInt();
+
+  Serial.println(command);
+
+  if(command == 1 )
+  {
+    Serial.println(F("Apagando banco de digitais..."));
+
+    if(fingerprintSensor.emptyDatabase() != FINGERPRINT_OK)
+    {
+      Serial.println(F("Erro ao apagar banco de digitais"));
+    }
+    else
+    {
+      Serial.println(F("Banco de digitais apagado com sucesso!!!"));
+    }
+  }
+  else
+  {
+    Serial.println(F("Cancelado"));
   }
 }
