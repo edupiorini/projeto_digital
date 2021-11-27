@@ -20,7 +20,7 @@ void setup() {
 void setupFingerprintSensor() {
   fingerprintSensor.begin(57600);
 
-  //Senha correta?
+  //Correct password? (will only be invoked when using hardware Serial)
   if(!fingerprintSensor.verifyPassword()){
     Serial.println(F("Não foi possível se conectar ao sensor!"));
     while(true);
@@ -28,14 +28,14 @@ void setupFingerprintSensor() {
 }
 
 void loop() {
-  //Gera o menu
+  //Defines menu
   printMenu();
 
-  //Leitura do comando e converte para inteiro
+ 
   String command = getCommand();
   int i = command.toInt();
 
-  //Designa opção selecionada no menu para função correspondente
+  //Makes switching between previous
   switch(i){
     case 1:
       storeFingerprint();
@@ -79,7 +79,7 @@ String getCommand() {
   return Serial.readStringUntil('\n');
 }
 
-//------------------------------------------------------------------------------------------------------->Cadastro de digitais
+//------------------------------------------------------------------------------------------------------->Fingerprint Store
 void storeFingerprint(){
   Serial.println(F("Qual a posição para guardar a digital? (1 a 149)"));
 
@@ -94,51 +94,51 @@ void storeFingerprint(){
 
   Serial.println(F("Encoste o dedo no sensor"));
 
-// ----------------------------------------------------------INICIO DE PROCESSO DE RECONHECIMENTO DA DIGITAL-----------------------------------------------------
-  //Aguarda imagém válida
+// ----------------------------------------------------------Begin of FP Recognition Loop-----------------------------------------------------
+  //Waiting for valid FP
   while(fingerprintSensor.getImage() != FINGERPRINT_OK);
 
-  //Converte para o primeiro padrão
+  //Converts to first pattern
   if(fingerprintSensor.image2Tz(1) != FINGERPRINT_OK){
-    //deu ruim
+    //bad req
     Serial.println(F("Erro image2Tz 1"));
     return;
-  } // se passou, então segue a vida
+  } // passed!
 
   Serial.println(F("Retire o dedo do sensor"));
 
   delay(2000);
-  //dedo foi retirado?
+  //Finger was taken?
   while(fingerprintSensor.getImage() != FINGERPRINT_NOFINGER);
 
-  //nova imagem da mesma digital para confirmação
+  //new image for quality increasing
   Serial.println(F("Encoste o mesmo dedo no sensor"));
 
 
   while(fingerprintSensor.getImage() != FINGERPRINT_OK);
   
   if(fingerprintSensor.image2Tz(2) != FINGERPRINT_OK){
-    //deu ruim
+    //bad req
     Serial.println(F("Erro image2Tz 2"));
     return;
-  } // se passou, então segue a vida
-// ----------------------------------------------------------FIM DE PROCESSO DE RECONHECIMENTO DA DIGITAL-----------------------------------------------------
+  } // passed, then move on
+// ----------------------------------------------------------End of FP Recognition Loop-----------------------------------------------------
 
-  //Criação de modelo
+  //Creation of model
   if(fingerprintSensor.createModel() != FINGERPRINT_OK){
-    //deu ruim de novo
+    
     Serial.println(F("Erro createModel"));
     return;
   }
 
-  //Guarda o modelo
+  //Stores model
   if(fingerprintSensor.storeModel(location) != FINGERPRINT_OK){
-    //ruim no storeModel
+    //bad req on storeModel
     Serial.println(F("Erro storeModel!"));
     return;
   }
 
-  //Chegamos até última verificação! Success!
+  // Success!
   Serial.println(F("Sucesso!!"));
 }
 
