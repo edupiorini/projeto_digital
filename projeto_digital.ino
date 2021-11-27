@@ -46,9 +46,9 @@ void loop() {
      case 3:
       printStoredFingerprintsCount();
       break;
-//     case 4;
-//     // deleteFingerprint();
-//      break;
+     case 4:
+      deleteFingerprint();
+      break;
 //     case 5;
 //     // emptyDatabase();
 //      break;
@@ -142,7 +142,7 @@ void storeFingerprint(){
   Serial.println(F("Sucesso!!"));
 }
 
-//------------------------------------------------------------------------------------------ >Verificação de digital cadastrada
+//------------------------------------------------------------------------------------------ >Stored fingerprint check
 void checkFingerPrint(){
   Serial.println(F("Encoste o dedo no sensor"));
 
@@ -158,7 +158,7 @@ void checkFingerPrint(){
     return;
   }
 
-  //Digital passou pelas verificações e será exibido a confiança da digital
+  //Fingerprint passed tests and will go on
   Serial.print(F("Digital encontrada com confiança de "));
   Serial.print(fingerprintSensor.confidence);
   Serial.print(F(" na posição "));
@@ -166,7 +166,8 @@ void checkFingerPrint(){
   
 }
 
-//---------------------------------------------------------------------------------------------> Mostra quantidade de Digitais cadastradas
+//---------------------------------------------------------------------------------------------> Shows number of fingerprints stored
+
 void printStoredFingerprintsCount() {
   //sensor puts qtty of fingerprints stored in "templateCount"
   fingerprintSensor.getTemplateCount();
@@ -174,4 +175,25 @@ void printStoredFingerprintsCount() {
   //Shows qtty stored
   Serial.print(F("Digitais cadastradas: "));
   Serial.println(fingerprintSensor.templateCount);
+}
+
+//---------------------------------------------------------------------------------------------> Delete fingerprint
+void deleteFingerprint() {
+  Serial.println(F("Qual a posição para apagar a digital? (1 a 149)"));
+
+  String strLocation = getCommand();
+  int location = strLocation.toInt();
+
+  if(location < 1 || location > 149){
+    Serial.println(F("Posição inválida!"));
+    return;
+  }
+
+  //Erases given fingerprint
+  if(fingerprintSensor.deleteModel(location) != FINGERPRINT_OK) {
+    Serial.println(F("Erro ao apagar digital"));
+    
+  }else {
+    Serial.println(F("Digital apagada com sucesso!!"));
+  }
 }
