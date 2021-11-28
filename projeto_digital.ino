@@ -1,9 +1,15 @@
+/*
+ * AUTOR: Eduardo Piorini
+ * LINK: https://www.github.com/edupiorini/projeto_digital
+ * DATA: 2021
+ */
+
 #include <Adafruit_Fingerprint.h> 
 #include <SoftwareSerial.h>
 
-//Senha padrão do sensor
+//Standard sensor password
 //const uint32_t password = 0x0;
-//Software Serial para Arduino Uno
+//Software Serial for Uno. In case of using hardware serial, uncomment password above
 SoftwareSerial mySerial(2, 3);
 
 Adafruit_Fingerprint fingerprintSensor = Adafruit_Fingerprint(&mySerial);
@@ -12,7 +18,7 @@ Adafruit_Fingerprint fingerprintSensor = Adafruit_Fingerprint(&mySerial);
 void setup() {
   Serial.begin(9600);
 
-  //Início do sensor
+  //Beginning of sensor
   setupFingerprintSensor();
 
 }
@@ -29,37 +35,41 @@ void setupFingerprintSensor() {
 
 void loop() {
   //Defines menu
-  printMenu();
 
- 
-  String command = getCommand();
-  int i = command.toInt();
+    printMenu();
+
+    String command = getCommand();
+    int i = command.toInt();
 
   //Makes switching between previous
-  switch(i){
-    case 1:
-      storeFingerprint();
-      break;
-     case 2:
-      checkFingerPrint();
-      break;
-     case 3:
-      printStoredFingerprintsCount();
-      break;
-     case 4:
-      deleteFingerprint();
-      break;
-     case 5:
-      emptyDatabase();
-      break;
-     default:
-      Serial.println(F("Opção Inválida"));
-      break;
-     
+    switch(i){
+      case 1:
+        storeFingerprint();
+        break;
+       case 2:
+        checkFingerPrint();
+        break;
+       case 3:
+        printStoredFingerprintsCount();
+        break;
+       case 4:
+        deleteFingerprint();
+        break;
+       case 5:
+        emptyDatabase();
+        break;
+       default:
+        Serial.println(F("Opção Inválida"));
+        break;
+       
+    }
+    delay(1000);
   }
+  
+  
 
-  delay(1000);
-}
+  
+
 
 
 
@@ -144,6 +154,7 @@ void storeFingerprint(){
 
 //------------------------------------------------------------------------------------------ >Stored fingerprint check
 void checkFingerPrint(){
+  
   Serial.println(F("Encoste o dedo no sensor"));
 
   while(fingerprintSensor.getImage() != FINGERPRINT_OK);
